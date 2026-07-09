@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
-const NAV = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; end?: boolean; badge?: string };
+const NAV: NavItem[] = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/app/profile", label: "Profile", icon: User },
   { to: "/app/notices", label: "Notices", icon: Megaphone },
@@ -31,7 +32,7 @@ const NAV = [
   { to: "/app/innovation", label: "Innovation Hub", icon: Lightbulb },
   { to: "/app/notifications", label: "Notifications", icon: Bell },
   { to: "/app/admin", label: "Admin", icon: Shield },
-] as const;
+];
 
 function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
