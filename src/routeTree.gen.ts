@@ -14,6 +14,19 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppTeamsRouteImport } from './routes/app.teams'
+import { Route as AppResourcesRouteImport } from './routes/app.resources'
+import { Route as AppProfileRouteImport } from './routes/app.profile'
+import { Route as AppPlacementsRouteImport } from './routes/app.placements'
+import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
+import { Route as AppNoticesRouteImport } from './routes/app.notices'
+import { Route as AppLostFoundRouteImport } from './routes/app.lost-found'
+import { Route as AppInnovationRouteImport } from './routes/app.innovation'
+import { Route as AppEventsRouteImport } from './routes/app.events'
+import { Route as AppAttendanceRouteImport } from './routes/app.attendance'
+import { Route as AppAdminRouteImport } from './routes/app.admin'
+import { Route as AppAcademicsRouteImport } from './routes/app.academics'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -40,40 +53,197 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTeamsRoute = AppTeamsRouteImport.update({
+  id: '/teams',
+  path: '/teams',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppResourcesRoute = AppResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlacementsRoute = AppPlacementsRouteImport.update({
+  id: '/placements',
+  path: '/placements',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNoticesRoute = AppNoticesRouteImport.update({
+  id: '/notices',
+  path: '/notices',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLostFoundRoute = AppLostFoundRouteImport.update({
+  id: '/lost-found',
+  path: '/lost-found',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInnovationRoute = AppInnovationRouteImport.update({
+  id: '/innovation',
+  path: '/innovation',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEventsRoute = AppEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAttendanceRoute = AppAttendanceRouteImport.update({
+  id: '/attendance',
+  path: '/attendance',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAcademicsRoute = AppAcademicsRouteImport.update({
+  id: '/academics',
+  path: '/academics',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/app/academics': typeof AppAcademicsRoute
+  '/app/admin': typeof AppAdminRoute
+  '/app/attendance': typeof AppAttendanceRoute
+  '/app/events': typeof AppEventsRoute
+  '/app/innovation': typeof AppInnovationRoute
+  '/app/lost-found': typeof AppLostFoundRoute
+  '/app/notices': typeof AppNoticesRoute
+  '/app/notifications': typeof AppNotificationsRoute
+  '/app/placements': typeof AppPlacementsRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/resources': typeof AppResourcesRoute
+  '/app/teams': typeof AppTeamsRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/app/academics': typeof AppAcademicsRoute
+  '/app/admin': typeof AppAdminRoute
+  '/app/attendance': typeof AppAttendanceRoute
+  '/app/events': typeof AppEventsRoute
+  '/app/innovation': typeof AppInnovationRoute
+  '/app/lost-found': typeof AppLostFoundRoute
+  '/app/notices': typeof AppNoticesRoute
+  '/app/notifications': typeof AppNotificationsRoute
+  '/app/placements': typeof AppPlacementsRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/resources': typeof AppResourcesRoute
+  '/app/teams': typeof AppTeamsRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/app/academics': typeof AppAcademicsRoute
+  '/app/admin': typeof AppAdminRoute
+  '/app/attendance': typeof AppAttendanceRoute
+  '/app/events': typeof AppEventsRoute
+  '/app/innovation': typeof AppInnovationRoute
+  '/app/lost-found': typeof AppLostFoundRoute
+  '/app/notices': typeof AppNoticesRoute
+  '/app/notifications': typeof AppNotificationsRoute
+  '/app/placements': typeof AppPlacementsRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/resources': typeof AppResourcesRoute
+  '/app/teams': typeof AppTeamsRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/forgot-password' | '/login' | '/register'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/forgot-password'
+    | '/login'
+    | '/register'
+    | '/app/academics'
+    | '/app/admin'
+    | '/app/attendance'
+    | '/app/events'
+    | '/app/innovation'
+    | '/app/lost-found'
+    | '/app/notices'
+    | '/app/notifications'
+    | '/app/placements'
+    | '/app/profile'
+    | '/app/resources'
+    | '/app/teams'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/forgot-password' | '/login' | '/register'
-  id: '__root__' | '/' | '/app' | '/forgot-password' | '/login' | '/register'
+  to:
+    | '/'
+    | '/forgot-password'
+    | '/login'
+    | '/register'
+    | '/app/academics'
+    | '/app/admin'
+    | '/app/attendance'
+    | '/app/events'
+    | '/app/innovation'
+    | '/app/lost-found'
+    | '/app/notices'
+    | '/app/notifications'
+    | '/app/placements'
+    | '/app/profile'
+    | '/app/resources'
+    | '/app/teams'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/forgot-password'
+    | '/login'
+    | '/register'
+    | '/app/academics'
+    | '/app/admin'
+    | '/app/attendance'
+    | '/app/events'
+    | '/app/innovation'
+    | '/app/lost-found'
+    | '/app/notices'
+    | '/app/notifications'
+    | '/app/placements'
+    | '/app/profile'
+    | '/app/resources'
+    | '/app/teams'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRoute
+  AppRoute: typeof AppRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
@@ -116,12 +286,137 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/teams': {
+      id: '/app/teams'
+      path: '/teams'
+      fullPath: '/app/teams'
+      preLoaderRoute: typeof AppTeamsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/resources': {
+      id: '/app/resources'
+      path: '/resources'
+      fullPath: '/app/resources'
+      preLoaderRoute: typeof AppResourcesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/placements': {
+      id: '/app/placements'
+      path: '/placements'
+      fullPath: '/app/placements'
+      preLoaderRoute: typeof AppPlacementsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/notifications': {
+      id: '/app/notifications'
+      path: '/notifications'
+      fullPath: '/app/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/notices': {
+      id: '/app/notices'
+      path: '/notices'
+      fullPath: '/app/notices'
+      preLoaderRoute: typeof AppNoticesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/lost-found': {
+      id: '/app/lost-found'
+      path: '/lost-found'
+      fullPath: '/app/lost-found'
+      preLoaderRoute: typeof AppLostFoundRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/innovation': {
+      id: '/app/innovation'
+      path: '/innovation'
+      fullPath: '/app/innovation'
+      preLoaderRoute: typeof AppInnovationRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/events': {
+      id: '/app/events'
+      path: '/events'
+      fullPath: '/app/events'
+      preLoaderRoute: typeof AppEventsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/attendance': {
+      id: '/app/attendance'
+      path: '/attendance'
+      fullPath: '/app/attendance'
+      preLoaderRoute: typeof AppAttendanceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/academics': {
+      id: '/app/academics'
+      path: '/academics'
+      fullPath: '/app/academics'
+      preLoaderRoute: typeof AppAcademicsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAcademicsRoute: typeof AppAcademicsRoute
+  AppAdminRoute: typeof AppAdminRoute
+  AppAttendanceRoute: typeof AppAttendanceRoute
+  AppEventsRoute: typeof AppEventsRoute
+  AppInnovationRoute: typeof AppInnovationRoute
+  AppLostFoundRoute: typeof AppLostFoundRoute
+  AppNoticesRoute: typeof AppNoticesRoute
+  AppNotificationsRoute: typeof AppNotificationsRoute
+  AppPlacementsRoute: typeof AppPlacementsRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppResourcesRoute: typeof AppResourcesRoute
+  AppTeamsRoute: typeof AppTeamsRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAcademicsRoute: AppAcademicsRoute,
+  AppAdminRoute: AppAdminRoute,
+  AppAttendanceRoute: AppAttendanceRoute,
+  AppEventsRoute: AppEventsRoute,
+  AppInnovationRoute: AppInnovationRoute,
+  AppLostFoundRoute: AppLostFoundRoute,
+  AppNoticesRoute: AppNoticesRoute,
+  AppNotificationsRoute: AppNotificationsRoute,
+  AppPlacementsRoute: AppPlacementsRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppResourcesRoute: AppResourcesRoute,
+  AppTeamsRoute: AppTeamsRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRoute,
+  AppRoute: AppRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
