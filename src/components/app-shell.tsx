@@ -54,7 +54,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           >
             <Icon className="h-4 w-4" />
             <span className="flex-1">{item.label}</span>
-            {"badge" in item && item.badge && (
+            {item.badge && (
               <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">{item.badge}</Badge>
             )}
           </Link>
