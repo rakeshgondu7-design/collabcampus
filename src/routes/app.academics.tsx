@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, CalendarDays, Sun } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { assignments } from "@/lib/mock-data";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/academics")({ component: AcademicsPage });
 

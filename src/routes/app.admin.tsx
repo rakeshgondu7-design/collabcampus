@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Shield, Users, FolderKanban, CalendarDays, Briefcase, Lightbulb, Search, TrendingUp } from "lucide-react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/admin")({ component: AdminPage });
 
