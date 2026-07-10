@@ -97,7 +97,7 @@ function AdminPage() {
                       <td className="p-3">{s.dept}</td>
                       <td className="p-3">{s.year}</td>
                       <td className="p-3"><Badge variant={s.status === "Active" ? "secondary" : "outline"}>{s.status}</Badge></td>
-                      <td className="p-3 text-right"><Button size="sm" variant="ghost">Manage</Button></td>
+                      <td className="p-3 text-right"><Button size="sm" variant="ghost" onClick={() => toast.success(`Managing ${s.name}`)}>Manage</Button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -106,7 +106,27 @@ function AdminPage() {
           </TabsContent>
 
           <TabsContent value="faculty" className="mt-4">
-            <div className="rounded-lg border p-6 text-sm text-muted-foreground">Faculty management table would appear here.</div>
+            <div className="overflow-hidden rounded-lg border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/50 text-left text-xs uppercase text-muted-foreground">
+                  <tr><th className="p-3">Name</th><th className="p-3">Dept</th><th className="p-3">Designation</th><th className="p-3"></th></tr>
+                </thead>
+                <tbody>
+                  {[
+                    { name: "Dr. Anitha Rao", dept: "CSE", role: "Professor" },
+                    { name: "Dr. Suresh Kumar", dept: "ECE", role: "Associate Professor" },
+                    { name: "Prof. Meena Iyer", dept: "ISE", role: "Assistant Professor" },
+                  ].map((f) => (
+                    <tr key={f.name} className="border-t">
+                      <td className="p-3 font-medium">{f.name}</td>
+                      <td className="p-3">{f.dept}</td>
+                      <td className="p-3">{f.role}</td>
+                      <td className="p-3 text-right"><Button size="sm" variant="ghost" onClick={() => toast.success(`Managing ${f.name}`)}>Manage</Button></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </TabsContent>
 
           <TabsContent value="moderation" className="mt-4 space-y-3">
@@ -117,7 +137,10 @@ function AdminPage() {
             ].map((m) => (
               <div key={m.title} className="flex items-center justify-between rounded-lg border p-3">
                 <div><div className="text-sm font-medium">{m.title}</div><div className="text-xs text-muted-foreground">{m.ctx}</div></div>
-                <div className="flex gap-2"><Button size="sm" variant="outline">Review</Button><Button size="sm" variant="destructive">Remove</Button></div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" onClick={() => toast.info(`Reviewing: ${m.title}`)}>Review</Button>
+                  <Button size="sm" variant="destructive" onClick={() => toast.success(`Removed: ${m.title}`)}>Remove</Button>
+                </div>
               </div>
             ))}
           </TabsContent>
