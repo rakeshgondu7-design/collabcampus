@@ -1,20 +1,45 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useRef, useState } from "react";
 import { PageHeader } from "@/components/app-shell";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { User, Github, Linkedin, Globe, Award, FileText, Rocket, Edit3 } from "lucide-react";
 import { currentUser } from "@/lib/mock-data";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/profile")({ component: ProfilePage });
 
 function ProfilePage() {
-  const u = currentUser;
+  const [u, setU] = useState(currentUser);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(u);
+  const [resume, setResume] = useState("Aarav_Sharma_Resume_v3.pdf");
+  const [resumeAt, setResumeAt] = useState("2 days ago");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const openEdit = () => { setDraft(u); setEditing(true); };
+  const save = () => {
+    setU({ ...draft, skills: typeof draft.skills === "string" ? (draft.skills as unknown as string).split(",").map((s) => s.trim()).filter(Boolean) : draft.skills });
+    setEditing(false);
+    toast.success("Profile updated");
+  };
+
+  const socials = [
+    { icon: Github, href: u.github ? `https://github.com/${u.github}` : "#", label: "GitHub" },
+    { icon: Linkedin, href: u.linkedin ? `https://linkedin.com/in/${u.linkedin}` : "#", label: "LinkedIn" },
+    { icon: Globe, href: u.portfolio ? `https://${u.portfolio}` : "#", label: "Portfolio" },
+  ];
+
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeader title="Your profile" description="Showcase your skills, projects, and achievements" icon={User}
-        action={<Button variant="outline"><Edit3 className="mr-1 h-4 w-4" /> Edit profile</Button>} />
+        action={<Button variant="outline" onClick={openEdit}><Edit3 className="mr-1 h-4 w-4" /> Edit profile</Button>} />
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="p-6 lg:col-span-1">
@@ -24,9 +49,9 @@ function ProfilePage() {
             <div className="text-sm text-muted-foreground">{u.rollNo} • {u.year}</div>
             <div className="text-xs text-muted-foreground">{u.department}</div>
             <div className="mt-4 flex gap-2">
-              <a href="#" className="rounded-md border p-2 hover:bg-accent"><Github className="h-4 w-4" /></a>
-              <a href="#" className="rounded-md border p-2 hover:bg-accent"><Linkedin className="h-4 w-4" /></a>
-              <a href="#" className="rounded-md border p-2 hover:bg-accent"><Globe className="h-4 w-4" /></a>
+              {socials.map((s) => (
+                <a key={s.label} href={s.href} target="_blank" rel="noreferrer" title={s.label} className="rounded-md border p-2 hover:bg-accent"><s.icon className="h-4 w-4" /></a>
+              ))}
             </div>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-3 text-center">
@@ -46,10 +71,22 @@ function ProfilePage() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div className="text-sm font-semibold">Resume</div>
-              <Button size="sm" variant="outline"><FileText className="mr-1 h-4 w-4" /> Upload</Button>
+              <Button size="sm" variant="outline" onClick={() => fileRef.current?.click()}>
+                <FileText className="mr-1 h-4 w-4" /> Upload
+              </Button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept=".pdf,.doc,.docx"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) { setResume(f.name); setResumeAt("just now"); toast.success("Resume uploaded"); }
+                }}
+              />
             </div>
             <div className="mt-3 rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-              Aarav_Sharma_Resume_v3.pdf • Updated 2 days ago
+              {resume} • Updated {resumeAt}
             </div>
           </Card>
 
@@ -87,6 +124,32 @@ function ProfilePage() {
           </Card>
         </div>
       </div>
+
+      <Dialog open={editing} onOpenChange={setEditing}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Edit profile</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            <div><Label>Name</Label><Input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} /></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label>Year</Label><Input value={draft.year} onChange={(e) => setDraft({ ...draft, year: e.target.value })} /></div>
+              <div><Label>Department</Label><Input value={draft.department} onChange={(e) => setDraft({ ...draft, department: e.target.value })} /></div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div><Label>GitHub</Label><Input value={draft.github} onChange={(e) => setDraft({ ...draft, github: e.target.value })} /></div>
+              <div><Label>LinkedIn</Label><Input value={draft.linkedin} onChange={(e) => setDraft({ ...draft, linkedin: e.target.value })} /></div>
+              <div><Label>Portfolio</Label><Input value={draft.portfolio} onChange={(e) => setDraft({ ...draft, portfolio: e.target.value })} /></div>
+            </div>
+            <div>
+              <Label>Skills (comma separated)</Label>
+              <Textarea
+                value={Array.isArray(draft.skills) ? draft.skills.join(", ") : (draft.skills as unknown as string)}
+                onChange={(e) => setDraft({ ...draft, skills: e.target.value as unknown as string[] })}
+              />
+            </div>
+          </div>
+          <DialogFooter><Button onClick={save}>Save changes</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

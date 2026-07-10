@@ -1,20 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { PageHeader } from "@/components/app-shell";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Briefcase, Building2, CalendarDays, IndianRupee, GraduationCap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { placements } from "@/lib/mock-data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/placements")({ component: PlacementsPage });
 
 const prep = [
-  { title: "System Design Primer", subtitle: "Curated from FAANG interviews" },
-  { title: "DSA — 150 Must-Do Problems", subtitle: "Sorted by frequency" },
-  { title: "Behavioral Interview Handbook", subtitle: "STAR method + real questions" },
-  { title: "Aptitude & Quant — Cracked", subtitle: "Speed drills + shortcuts" },
+  { title: "System Design Primer", subtitle: "Curated from FAANG interviews", body: "Covers scalability, caching, sharding, load balancers, message queues, and real-world case studies (Twitter, WhatsApp, YouTube). Practice with the included whiteboard prompts." },
+  { title: "DSA — 150 Must-Do Problems", subtitle: "Sorted by frequency", body: "Arrays, strings, trees, graphs, DP. Each problem includes optimal solution, complexity analysis, and follow-ups asked in real interviews." },
+  { title: "Behavioral Interview Handbook", subtitle: "STAR method + real questions", body: "Situation-Task-Action-Result framework with 40+ real prompts from top companies. Includes tips for reducing filler words and structuring answers." },
+  { title: "Aptitude & Quant — Cracked", subtitle: "Speed drills + shortcuts", body: "Time-work, percentages, permutations, logical reasoning. Tricks to solve in under 45 seconds and full timed mock tests." },
 ];
 const tracker = [
   { company: "Google", stage: "Online Assessment", status: "In Progress" },
@@ -23,6 +25,9 @@ const tracker = [
 ];
 
 function PlacementsPage() {
+  const [applied, setApplied] = useState<Set<number>>(new Set());
+  const [prepOpen, setPrepOpen] = useState<(typeof prep)[number] | null>(null);
+
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeader title="Placement Hub" description="Companies, prep resources, and your application tracker" icon={Briefcase} />
@@ -53,7 +58,13 @@ function PlacementsPage() {
                 <div className="rounded-lg border p-2"><CalendarDays className="mb-1 h-3 w-3 text-primary" /><div className="font-semibold">{p.deadline}</div><div className="text-muted-foreground">Deadline</div></div>
               </div>
               <div className="mt-2 text-xs text-muted-foreground">Eligibility: {p.eligibility}</div>
-              <Button className="mt-4 w-full" onClick={() => toast.success(`Applied to ${p.company}`)}>Apply now</Button>
+              <Button
+                className="mt-4 w-full"
+                disabled={applied.has(p.id)}
+                onClick={() => { setApplied(new Set([...applied, p.id])); toast.success(`Applied to ${p.company}`); }}
+              >
+                {applied.has(p.id) ? "Applied" : "Apply now"}
+              </Button>
             </Card>
           ))}
         </TabsContent>
@@ -63,7 +74,7 @@ function PlacementsPage() {
             <Card key={p.title} className="p-5">
               <div className="font-semibold">{p.title}</div>
               <div className="text-xs text-muted-foreground">{p.subtitle}</div>
-              <Button variant="outline" size="sm" className="mt-3">Open</Button>
+              <Button variant="outline" size="sm" className="mt-3" onClick={() => setPrepOpen(p)}>Open</Button>
             </Card>
           ))}
         </TabsContent>
@@ -80,6 +91,16 @@ function PlacementsPage() {
           ))}
         </TabsContent>
       </Tabs>
+
+      <Dialog open={!!prepOpen} onOpenChange={(v) => !v && setPrepOpen(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{prepOpen?.title}</DialogTitle>
+            <DialogDescription>{prepOpen?.subtitle}</DialogDescription>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">{prepOpen?.body}</p>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, CalendarDays, Sun } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { assignments } from "@/lib/mock-data";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/academics")({ component: AcademicsPage });
 
@@ -54,7 +55,7 @@ function AcademicsPage() {
                 <div className="text-xs text-muted-foreground">{a.subject} • Due {a.due}</div>
               </div>
               <Badge variant={a.status === "Submitted" ? "secondary" : "default"}>{a.status}</Badge>
-              <Button variant="outline" size="sm">Open</Button>
+              <Button variant="outline" size="sm" onClick={() => toast.info(`Opening ${a.title}`)}>Open</Button>
             </Card>
           ))}
         </TabsContent>
