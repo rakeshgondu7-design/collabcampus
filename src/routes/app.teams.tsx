@@ -73,7 +73,7 @@ function TeamsPage() {
             </div>
             <div className="mt-4 flex gap-2">
               <Button className="flex-1" onClick={() => toast.success(`Applied to ${p.title}`)}>Apply</Button>
-              <Button variant="outline">View</Button>
+              <Button variant="outline" onClick={() => toast.info(`Viewing ${p.title}`)}>View</Button>
             </div>
           </Card>
         ))}
