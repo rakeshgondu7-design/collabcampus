@@ -55,7 +55,7 @@ function AcademicsPage() {
                 <div className="text-xs text-muted-foreground">{a.subject} • Due {a.due}</div>
               </div>
               <Badge variant={a.status === "Submitted" ? "secondary" : "default"}>{a.status}</Badge>
-              <Button variant="outline" size="sm">Open</Button>
+              <Button variant="outline" size="sm" onClick={() => toast.info(`Opening ${a.title}`)}>Open</Button>
             </Card>
           ))}
         </TabsContent>
