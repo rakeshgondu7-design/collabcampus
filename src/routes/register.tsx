@@ -8,24 +8,49 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth, type Role } from "@/lib/auth";
 import { toast } from "sonner";
+import { lovable } from "@/integrations/lovable";
 
 export const Route = createFileRoute("/register")({ component: RegisterPage });
 
 function RegisterPage() {
-  const { signIn } = useAuth();
+  const { signUp } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "Student" as Role });
   const [loading, setLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.email || !form.password || !form.name) return toast.error("Fill all fields");
+    if (form.password.length < 6) return toast.error("Password must be at least 6 characters");
     setLoading(true);
-    setTimeout(() => {
-      signIn(form.email, form.password, form.role);
-      toast.success("Account created! Welcome to Campus Connect.");
+    try {
+      const data = await signUp(form.email, form.password, form.name, form.role);
+      if (data.session) {
+        toast.success("Account created! Welcome to Campus Connect.");
+        navigate({ to: "/app" });
+      } else {
+        toast.success("Check your email to confirm your account.");
+        navigate({ to: "/login" });
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Sign up failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const google = async () => {
+    setLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+      if (result.error) throw result.error;
+      if (result.redirected) return;
       navigate({ to: "/app" });
-    }, 400);
+    } catch (err: any) {
+      toast.error(err?.message || "Google sign-in failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,6 +71,12 @@ function RegisterPage() {
           <p className="mt-1 text-sm text-muted-foreground">Get started with your college email.</p>
 
           <Card className="mt-6 p-6">
+            <Button type="button" variant="outline" className="w-full" onClick={google} disabled={loading}>
+              Continue with Google
+            </Button>
+            <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
+              <div className="h-px flex-1 bg-border" /> OR <div className="h-px flex-1 bg-border" />
+            </div>
             <form onSubmit={submit} className="space-y-4">
               <div>
                 <Label htmlFor="name">Full name</Label>
@@ -57,7 +88,7 @@ function RegisterPage() {
               </div>
               <div>
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="mt-1.5" required />
+                <Input id="password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="mt-1.5" required minLength={6} />
               </div>
               <div>
                 <Label>Role</Label>
