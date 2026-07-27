@@ -64,8 +64,9 @@ function ProfilePage() {
     const reader = new FileReader();
     reader.onload = async () => {
       const url = reader.result as string;
+      const patch = kind === "avatar" ? { avatar_url: url } : { resume_url: url };
+      const { error } = await supabase.from("profiles").update(patch).eq("id", user.id);
       const field = kind === "avatar" ? "avatar_url" : "resume_url";
-      const { error } = await supabase.from("profiles").update({ [field]: url }).eq("id", user.id);
       if (error) return toast.error(error.message);
       setProfile((p) => p ? { ...p, [field]: url } as Profile : p);
       toast.success(`${kind === "avatar" ? "Avatar" : "Resume"} uploaded`);
