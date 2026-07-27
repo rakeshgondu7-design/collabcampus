@@ -1,5 +1,5 @@
 import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard, User, Megaphone, BookOpen, CalendarCheck, Users, FolderKanban,
   Briefcase, CalendarDays, Search, Lightbulb, Bell, Shield, LogOut, Menu, GraduationCap,
