@@ -169,7 +169,7 @@ export function AppShell() {
                 <DropdownMenuItem asChild><Link to="/app/profile"><User className="mr-2 h-4 w-4" />Profile</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/">Landing page</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => { signOut(); navigate({ to: "/login" }); }}>
+                <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" /> Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
