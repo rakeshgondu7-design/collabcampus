@@ -14,16 +14,648 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attendance_records: {
+        Row: {
+          created_at: string
+          id: string
+          marked_by: string | null
+          session_date: string
+          status: Database["public"]["Enums"]["attendance_status"]
+          student_id: string
+          subject_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          marked_by?: string | null
+          session_date: string
+          status?: Database["public"]["Enums"]["attendance_status"]
+          student_id: string
+          subject_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          marked_by?: string | null
+          session_date?: string
+          status?: Database["public"]["Enums"]["attendance_status"]
+          student_id?: string
+          subject_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_records_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      companies: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          industry: string | null
+          logo_url: string | null
+          name: string
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          industry?: string | null
+          logo_url?: string | null
+          name: string
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          industry?: string | null
+          logo_url?: string | null
+          name?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      event_registrations: {
+        Row: {
+          created_at: string
+          event_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          event_date: string
+          id: string
+          location: string | null
+          organizer_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          event_date: string
+          id?: string
+          location?: string | null
+          organizer_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          id?: string
+          location?: string | null
+          organizer_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      idea_likes: {
+        Row: {
+          created_at: string
+          idea_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          idea_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          idea_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "idea_likes_idea_id_fkey"
+            columns: ["idea_id"]
+            isOneToOne: false
+            referencedRelation: "ideas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "idea_likes_idea_id_fkey"
+            columns: ["idea_id"]
+            isOneToOne: false
+            referencedRelation: "ideas_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ideas: {
+        Row: {
+          anonymous: boolean
+          author_id: string
+          category: string
+          created_at: string
+          description: string
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          anonymous?: boolean
+          author_id: string
+          category?: string
+          created_at?: string
+          description: string
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          anonymous?: boolean
+          author_id?: string
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      lost_items: {
+        Row: {
+          contact: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          location: string | null
+          reporter_id: string
+          resolved: boolean
+          title: string
+          type: Database["public"]["Enums"]["lost_found_type"]
+          updated_at: string
+          verified: boolean
+        }
+        Insert: {
+          contact?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          reporter_id: string
+          resolved?: boolean
+          title: string
+          type: Database["public"]["Enums"]["lost_found_type"]
+          updated_at?: string
+          verified?: boolean
+        }
+        Update: {
+          contact?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          reporter_id?: string
+          resolved?: boolean
+          title?: string
+          type?: Database["public"]["Enums"]["lost_found_type"]
+          updated_at?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
+      notices: {
+        Row: {
+          author_id: string
+          body: string
+          category: string
+          created_at: string
+          id: string
+          priority: Database["public"]["Enums"]["notice_priority"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          category?: string
+          created_at?: string
+          id?: string
+          priority?: Database["public"]["Enums"]["notice_priority"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          category?: string
+          created_at?: string
+          id?: string
+          priority?: Database["public"]["Enums"]["notice_priority"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          link: string | null
+          text: string
+          type: string
+          unread: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          link?: string | null
+          text: string
+          type?: string
+          unread?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          link?: string | null
+          text?: string
+          type?: string
+          unread?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
+      placement_applications: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          placement_id: string
+          status: Database["public"]["Enums"]["application_status"]
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          placement_id: string
+          status?: Database["public"]["Enums"]["application_status"]
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          placement_id?: string
+          status?: Database["public"]["Enums"]["application_status"]
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "placement_applications_placement_id_fkey"
+            columns: ["placement_id"]
+            isOneToOne: false
+            referencedRelation: "placements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      placements: {
+        Row: {
+          apply_deadline: string | null
+          company_id: string
+          created_at: string
+          ctc: string | null
+          eligibility: string | null
+          id: string
+          location: string | null
+          posted_by: string | null
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          apply_deadline?: string | null
+          company_id: string
+          created_at?: string
+          ctc?: string | null
+          eligibility?: string | null
+          id?: string
+          location?: string | null
+          posted_by?: string | null
+          role: string
+          updated_at?: string
+        }
+        Update: {
+          apply_deadline?: string | null
+          company_id?: string
+          created_at?: string
+          ctc?: string | null
+          eligibility?: string | null
+          id?: string
+          location?: string | null
+          posted_by?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "placements_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          department: string | null
+          email: string
+          github: string | null
+          id: string
+          linkedin: string | null
+          name: string
+          phone: string | null
+          portfolio: string | null
+          resume_url: string | null
+          updated_at: string
+          year: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          email: string
+          github?: string | null
+          id: string
+          linkedin?: string | null
+          name?: string
+          phone?: string | null
+          portfolio?: string | null
+          resume_url?: string | null
+          updated_at?: string
+          year?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          email?: string
+          github?: string | null
+          id?: string
+          linkedin?: string | null
+          name?: string
+          phone?: string | null
+          portfolio?: string | null
+          resume_url?: string | null
+          updated_at?: string
+          year?: string | null
+        }
+        Relationships: []
+      }
+      resources: {
+        Row: {
+          created_at: string
+          downloads: number
+          file_path: string | null
+          file_url: string | null
+          id: string
+          subject: string
+          title: string
+          type: string
+          updated_at: string
+          uploader_id: string
+        }
+        Insert: {
+          created_at?: string
+          downloads?: number
+          file_path?: string | null
+          file_url?: string | null
+          id?: string
+          subject: string
+          title: string
+          type?: string
+          updated_at?: string
+          uploader_id: string
+        }
+        Update: {
+          created_at?: string
+          downloads?: number
+          file_path?: string | null
+          file_url?: string | null
+          id?: string
+          subject?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          uploader_id?: string
+        }
+        Relationships: []
+      }
+      subjects: {
+        Row: {
+          code: string
+          created_at: string
+          department: string | null
+          faculty_id: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          department?: string | null
+          faculty_id?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          department?: string | null
+          faculty_id?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      team_applications: {
+        Row: {
+          applicant_id: string
+          created_at: string
+          id: string
+          message: string | null
+          project_id: string
+          status: Database["public"]["Enums"]["application_status"]
+          updated_at: string
+        }
+        Insert: {
+          applicant_id: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          project_id: string
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+        }
+        Update: {
+          applicant_id?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          project_id?: string
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_applications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "team_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_projects: {
+        Row: {
+          created_at: string
+          deadline: string | null
+          description: string
+          id: string
+          owner_id: string
+          skills: string[]
+          slots_needed: number
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deadline?: string | null
+          description: string
+          id?: string
+          owner_id: string
+          skills?: string[]
+          slots_needed?: number
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deadline?: string | null
+          description?: string
+          id?: string
+          owner_id?: string
+          skills?: string[]
+          slots_needed?: number
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      ideas_public: {
+        Row: {
+          anonymous: boolean | null
+          author_id: string | null
+          author_name: string | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          liked_by_me: boolean | null
+          likes_count: number | null
+          title: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role:
+        | "Student"
+        | "Faculty"
+        | "Placement Officer"
+        | "Club Coordinator"
+        | "Admin"
+      application_status: "pending" | "accepted" | "rejected" | "withdrawn"
+      attendance_status: "present" | "absent" | "late"
+      lost_found_type: "lost" | "found"
+      notice_priority: "low" | "normal" | "high" | "urgent"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +782,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: [
+        "Student",
+        "Faculty",
+        "Placement Officer",
+        "Club Coordinator",
+        "Admin",
+      ],
+      application_status: ["pending", "accepted", "rejected", "withdrawn"],
+      attendance_status: ["present", "absent", "late"],
+      lost_found_type: ["lost", "found"],
+      notice_priority: ["low", "normal", "high", "urgent"],
+    },
   },
 } as const
