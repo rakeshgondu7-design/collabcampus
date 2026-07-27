@@ -1,5 +1,5 @@
 import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard, User, Megaphone, BookOpen, CalendarCheck, Users, FolderKanban,
   Briefcase, CalendarDays, Search, Lightbulb, Bell, Shield, LogOut, Menu, GraduationCap,
@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/lib/auth";
-import { notifications } from "@/lib/mock-data";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
@@ -67,11 +68,32 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 export function AppShell() {
   const { user, hydrated, signOut } = useAuth();
   const navigate = useNavigate();
-  const unread = notifications.filter((n) => n.unread).length;
+  const queryClient = useQueryClient();
+  const [unread, setUnread] = useState(0);
 
   useEffect(() => {
     if (hydrated && !user) navigate({ to: "/login", replace: true });
   }, [hydrated, user, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+    const load = async () => {
+      const { count } = await supabase.from("notifications").select("*", { count: "exact", head: true }).eq("user_id", user.id).eq("unread", true);
+      setUnread(count ?? 0);
+    };
+    load();
+    const ch = supabase.channel(`unread-${user.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, load)
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [user]);
+
+  const handleSignOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await signOut();
+    navigate({ to: "/login", replace: true });
+  };
 
   if (!hydrated || !user) {
     return <div className="grid min-h-screen place-items-center text-muted-foreground text-sm">Loading…</div>;
@@ -147,7 +169,7 @@ export function AppShell() {
                 <DropdownMenuItem asChild><Link to="/app/profile"><User className="mr-2 h-4 w-4" />Profile</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/">Landing page</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => { signOut(); navigate({ to: "/login" }); }}>
+                <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" /> Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>

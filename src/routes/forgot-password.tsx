@@ -5,43 +5,58 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/forgot-password")({ component: ForgotPasswordPage });
+export const Route = createFileRoute("/forgot-password")({ component: ForgotPage });
 
-function ForgotPasswordPage() {
+function ForgotPage() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const submit = (e: React.FormEvent) => {
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    setSent(true);
-    toast.success("Reset link sent — check your inbox.");
+    if (!email) return toast.error("Enter your email");
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      setSent(true);
+      toast.success("Reset link sent — check your inbox");
+    } catch (err: any) {
+      toast.error(err?.message || "Could not send reset email");
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
-    <div className="grid min-h-screen place-items-center bg-gradient-subtle px-6 py-12">
+    <div className="grid min-h-screen place-items-center px-6 py-12">
       <div className="w-full max-w-sm">
-        <div className="text-center"><Logo className="justify-center" /></div>
-        <Card className="mt-8 p-6">
-          <h1 className="text-xl font-bold">Reset your password</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Enter your college email and we'll send you a reset link.</p>
+        <Logo />
+        <h1 className="mt-8 text-2xl font-bold tracking-tight">Reset your password</h1>
+        <p className="mt-1 text-sm text-muted-foreground">We'll email you a link to set a new password.</p>
+        <Card className="mt-6 p-6">
           {sent ? (
-            <div className="mt-6 rounded-lg border border-success/30 bg-success/10 p-4 text-sm text-success-foreground">
-              If an account exists for <b>{email}</b>, a reset link has been sent.
+            <div className="text-sm text-muted-foreground">
+              If an account exists for <span className="font-medium text-foreground">{email}</span>, a reset link is on its way.
             </div>
           ) : (
-            <form onSubmit={submit} className="mt-6 space-y-4">
+            <form onSubmit={submit} className="space-y-4">
               <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5" required />
+                <Label htmlFor="email">College email</Label>
+                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="mt-1.5" />
               </div>
-              <Button type="submit" className="w-full">Send reset link</Button>
+              <Button type="submit" className="w-full" disabled={loading}>{loading ? "Sending…" : "Send reset link"}</Button>
             </form>
           )}
-          <div className="mt-6 text-center text-sm">
-            <Link to="/login" className="text-primary hover:underline">← Back to sign in</Link>
-          </div>
         </Card>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Remembered it? <Link to="/login" className="font-medium text-primary hover:underline">Sign in</Link>
+        </p>
       </div>
     </div>
   );

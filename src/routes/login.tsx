@@ -7,25 +7,45 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import { lovable } from "@/integrations/lovable";
 
 export const Route = createFileRoute("/login")({ component: LoginPage });
 
 function LoginPage() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("aarav.sharma@campus.edu");
-  const [password, setPassword] = useState("demopass");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return toast.error("Enter email and password");
     setLoading(true);
-    setTimeout(() => {
-      signIn(email, password);
+    try {
+      await signIn(email, password);
       toast.success("Welcome back!");
       navigate({ to: "/app" });
-    }, 350);
+    } catch (err: any) {
+      toast.error(err?.message || "Sign in failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const google = async () => {
+    setLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+      if (result.error) throw result.error;
+      if (result.redirected) return;
+      toast.success("Signed in");
+      navigate({ to: "/app" });
+    } catch (err: any) {
+      toast.error(err?.message || "Google sign-in failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,6 +57,12 @@ function LoginPage() {
           <p className="mt-1 text-sm text-muted-foreground">Sign in to continue to Campus Connect.</p>
 
           <Card className="mt-6 p-6">
+            <Button type="button" variant="outline" className="w-full" onClick={google} disabled={loading}>
+              Continue with Google
+            </Button>
+            <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
+              <div className="h-px flex-1 bg-border" /> OR <div className="h-px flex-1 bg-border" />
+            </div>
             <form onSubmit={submit} className="space-y-4">
               <div>
                 <Label htmlFor="email">College email</Label>
